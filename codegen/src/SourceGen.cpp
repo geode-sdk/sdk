@@ -2,11 +2,11 @@
 
 namespace { namespace format_strings {
 	char const* source_start = R"CAC(
-#include <codegen-base/HeaderBase.hpp>
-#include <utils/addresser.hpp>
-#include <utils/casts.hpp>
-#include <syntax/Addresses.hpp>
-#include <syntax/Types.hpp>
+#include <Geode/Bindings.hpp>
+#include <Geode/utils/addresser.hpp>
+#include <Geode/utils/casts.hpp>
+#include <Geode/modify/Addresses.hpp>
+#include <Geode/modify/Types.hpp>
 using namespace geode;
 using namespace geode::cast;
 using cocos2d::CCDestructor;

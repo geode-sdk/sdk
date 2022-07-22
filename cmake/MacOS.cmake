@@ -7,9 +7,9 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9) # did i tell im lazy
 
 
 include_directories(
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/mac
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/mac
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/mac/OGLES
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/mac
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/mac
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/mac/OGLES
 )
 
 target_link_libraries(${PROJECT_NAME} "-framework Cocoa")

@@ -6,7 +6,7 @@ target_compile_options(${PROJECT_NAME} -fms-extensions -Xlinker --no-demangle -W
 target_link_libraries(${PROJECT_NAME} log android EGL GLESv2)
 
 include_directories(
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/android
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/android
 )
 
 macro(link_prebuilts project)

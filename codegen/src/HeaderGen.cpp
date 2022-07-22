@@ -77,7 +77,7 @@ std::string generateGDHeader(Root const& root) {
 	set<ClassDefinition const*> looked;
 	vector<ClassDefinition const*> ordered;
 
-    string output = "#pragma once\n#include <gdstdlib.hpp>\n#include <cocos2d.h>\n";
+    string output = "#pragma once\n#include <Geode/c++stl/gdstdlib.hpp>\n#include <cocos2d.h>\n";
 
     for (auto& [name, c] : root.classes) {
         sortClass(root, &c, looked, ordered);

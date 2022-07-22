@@ -26,7 +26,7 @@ if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUA
 endif()
 
 include_directories(
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/ios
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/ios
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/ios/OGLES
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/ios
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/ios
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/ios/OGLES
 )

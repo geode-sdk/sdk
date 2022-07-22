@@ -2,13 +2,13 @@ add_definitions(-DCC_TARGET_OS_WIN32)
 set(CMAKE_SYSTEM_NAME Win32)
 
 include_directories(
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/win32
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/win32
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/win32/zlib
-	${GEODE_SDK_PATH}/include/cocos/cocos2dx/platform/third_party/win32/OGLES
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/win32
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/win32
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/win32/zlib
+	${GEODE_SDK_PATH}/include/Geode/cocos/cocos2dx/platform/third_party/win32/OGLES
 
-	${GEODE_SDK_PATH}/include/hook/geode-meta/include
-	${GEODE_SDK_PATH}/include/hook/geode-meta/include/x86
+	${GEODE_SDK_PATH}/include/Geode/hook/geode-meta/include
+	${GEODE_SDK_PATH}/include/Geode/hook/geode-meta/include/x86
 )
 
 macro(link_prebuilts project)
