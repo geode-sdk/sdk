@@ -11,29 +11,33 @@ GEODE_NOINLINE GEODE_HIDDEN inline static uintptr_t address{index}() {{
 
 }}
 
-static string getAddress(Function const& f) {
-    if (codegen::isFunctionDefined(f)) {
-        string format;
-        if (f.function_type == kVirtualFunction)
-            format = "addresser::getVirtual((types::member{})(&{}::{}))";
-        else
-            format = "addresser::getNonVirtual((types::member{})(&{}::{}))";
-        return fmt::format(format, f.global_index, f.parent_class->name, f.name);
-    }
-    else return "base::get() + " + f.binds[codegen::platform];
-}
+std::string generateAddressHeader(Root& root) {
+	std::string output;
 
-std::string generateAddressHeader(Root const& root) {
-	string output("");
+	for (auto& c : root.classes) {
 
-	for (auto& [name, c] : root.classes) {
-		for (auto& f : c.functions) {
-			if (!codegen::isFunctionDefinable(f) && !codegen::isFunctionDefined(f))
-                continue; // Function not supported, skip
+		for (auto& field : c.fields) {
+			if (codegen::getStatus(field) == BindStatus::Unbindable)
+				continue;
+
+			std::string address_str;
+
+			if (auto fn = field.get_as<FunctionBindField>()) {
+				address_str = fmt::format("base::get() + {}", codegen::platformNumber(fn->binds));
+			} else if (auto fn = field.get_as<OutOfLineField>()) {
+				address_str = fmt::format("addresser::get{}Virtual((types::member{})(&{}::{}))",
+					str_if("Non", !fn->beginning.is_virtual),
+					field.field_id,
+					field.parent,
+					fn->beginning.name
+				);
+			} else {
+				continue;
+			}
 
 			output += fmt::format(::format_strings::declare_address,
-				fmt::arg("address", getAddress(f)),
-				fmt::arg("index", codegen::getIndex(f))
+				fmt::arg("address", address_str),
+				fmt::arg("index", field.field_id)
 			);
 		}
 	}

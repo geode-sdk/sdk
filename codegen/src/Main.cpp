@@ -19,42 +19,35 @@ void writeFile(ghc::filesystem::path const& writePath, std::string const& output
 }
 
 int main(int argc, char** argv) {
-	if (argc != 4) codegenerr("Invalid number of parameters (expected 3 found %d)", argc-1);
+	if (argc != 4) throw codegen::error("Invalid number of parameters (expected 3 found {})", argc-1);
 
     std::string p = argv[1];
 
-    if (p == "Win32") codegen::platform = kWindows;
-    else if (p == "MacOS") codegen::platform = kMac;
-    else if (p == "iOS") codegen::platform = kIos;
-    else if (p == "Android") codegen::platform = kAndroid;
-    else codegenerr("Invalid platform %s\n", p.c_str());
+    if (p == "Win32") codegen::platform = Platform::Windows;
+    else if (p == "MacOS") codegen::platform = Platform::Mac;
+    else if (p == "iOS") codegen::platform = Platform::iOS;
+    else if (p == "Android") codegen::platform = Platform::Android;
+    else throw codegen::error("Invalid platform {}\n", p);
 
     chdir(argv[2]);
-    std::stringstream stream;
-    stream << "#include <Entry.bro>";
 
     ghc::filesystem::path writeDir = argv[3];
     ghc::filesystem::create_directories(writeDir);
-    auto fileWithDir = [writeDir](char const* file) {
-    	return writeDir / file;
-    };
-    Root root = parseTokens(lexStream(stream));
 
-    /* add missing parameter names */
-    for (auto& [name, c] : root.classes) {
-		for (auto& f : c.functions) {
-            for (size_t i = 0; i < f.argnames.size(); ++i) {
-	            if (f.argnames[i] == "") {
-	                f.argnames[i] = fmt::format("p{}", i);
-	            }
-	        }
+    Root root = parse_file("Entry.bro");
+
+    for (auto cls : root.classes) {
+        for (auto dep : cls.depends) {
+            if(!can_find(dep, "cocos2d::") && std::find(root.classes.begin(), root.classes.end(), dep) == root.classes.end()) {
+                throw codegen::error("Class {} depends on unknown class {}", cls.name, dep);
+            }
         }
     }
 
-    writeFile(fileWithDir("GeneratedAddress.hpp"), generateAddressHeader(root));
-    writeFile(fileWithDir("GeneratedModify.hpp"), generateModifyHeader(root)); // pretty much obsolete with a custom compiler
-    writeFile(fileWithDir("GeneratedWrapper.hpp"), generateWrapperHeader(root)); // pretty much obsolete with a custom compiler
-    writeFile(fileWithDir("GeneratedType.hpp"), generateTypeHeader(root)); // pretty much obsolete with a custom compiler
-    writeFile(fileWithDir("GeneratedHeader.hpp"), generateGDHeader(root));
-    writeFile(fileWithDir("GeneratedSource.cpp"), generateGDSource(root));
+    writeFile(writeDir / "GeneratedAddress.hpp", generateAddressHeader(root));
+    writeFile(writeDir / "GeneratedModify.hpp", generateModifyHeader(root)); // pretty much obsolete with a custom compiler
+    writeFile(writeDir / "GeneratedWrapper.hpp", generateWrapperHeader(root)); // pretty much obsolete with a custom compiler
+    writeFile(writeDir / "GeneratedType.hpp", generateTypeHeader(root)); // pretty much obsolete with a custom compiler
+    writeFile(writeDir / "GeneratedHeader.hpp", generateGDHeader(root));
+    writeFile(writeDir / "GeneratedSource.cpp", generateGDSource(root));
 }
