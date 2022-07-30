@@ -23,38 +23,46 @@ struct Modify<Derived, {class_name}> : ModifyBase<Modify<Derived, {class_name}>>
 }}
 
 
-std::string generateModifyHeader(Root const& root) {
-	string output;
+std::string generateModifyHeader(Root& root) {
+	std::string output;
 
-	for (auto& [name, c] : root.classes) {
-		if (name == "" || name == "cocos2d")
+	for (auto c : root.classes) {
+		if (c.name == "cocos2d")
 			continue;
 
-		output += fmt::format(::format_strings::modify_start, 
-			fmt::arg("class_name", name)
+		output += fmt::format(format_strings::modify_start, 
+			fmt::arg("class_name", c.name)
 		);
 
-		for (auto& f : c.functions) {
-			if (!codegen::isFunctionDefinable(f) && !codegen::isFunctionDefined(f))
-				continue; // Function not supported for this platform, skip it
-            string function_name = codegen::getFunctionName(f);
-            switch (f.function_type) {
-                case kConstructor: function_name = "constructor";
-                case kDestructor: function_name = "destructor";
-                default: break;
-            }
+		for (auto& f : c.fields) {
+			if (codegen::getStatus(f) != BindStatus::Unbindable) {
+				auto begin = f.get_fn();
 
-			output += fmt::format(::format_strings::apply_function,
-				fmt::arg("index", codegen::getIndex(f)),
-				fmt::arg("class_name", codegen::getClassName(f)),
-				fmt::arg("function_name", function_name),
-				fmt::arg("function_convention", codegen::getConvention(f))
-			);
+				std::string function_name;
+
+				switch (begin->type) {
+					case FunctionType::Normal:
+						function_name = begin->name;
+						break;
+					case FunctionType::Ctor:
+						function_name = "constructor";
+						break;
+					case FunctionType::Dtor:
+						function_name = "destructor";
+						break;
+				}
+
+				output += fmt::format(format_strings::apply_function,
+					fmt::arg("index", f.field_id),
+					fmt::arg("class_name", c.name),
+					fmt::arg("function_name", function_name),
+					fmt::arg("function_convention", codegen::getConvention(f))
+				);
+			}
 		}
 
-		output += ::format_strings::modify_end;
+		output += format_strings::modify_end;
 	}
 
-	// fmt::print("{}", output);
 	return output;
 }

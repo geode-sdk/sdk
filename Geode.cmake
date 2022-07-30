@@ -64,8 +64,15 @@ function(setup_geode_mod)
 
 		if (DEFINED GEODE_CODEGEN_BUILD)
 			add_subdirectory(${GEODE_SDK_PATH}/codegen ${GEODE_CODEGEN_DIR})
+
+			add_custom_target(CodegenRun ALL
+				COMMAND Codegen ${GEODE_TARGET_PLATFORM} ${GEODE_BINDING_PATH} ${GEODE_CODEGEN_DIR}
+				WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+				COMMENT "Run Codegen"
+			)
 		endif()
 
+		add_dependencies(CodegenRun Codegen)
 		add_dependencies(${PROJECT_NAME} CodegenRun)
 		target_compile_definitions(${PROJECT_NAME} PUBLIC -DGEODE_BUILDING_CODEGEN)
 	endif()
