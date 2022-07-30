@@ -1,5 +1,5 @@
 #include "Shared.hpp"
-#include "../../include/Geode/utils/fs/filesystem.hpp" // bruh
+#include <fs/filesystem.hpp> // bruh
 
 using namespace codegen;
 
@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     ghc::filesystem::path writeDir = argv[3];
     ghc::filesystem::create_directories(writeDir);
 
-    Root root = parse_file("Entry.bro");
+    Root root = broma::parse_file("Entry.bro");
 
     for (auto cls : root.classes) {
         for (auto dep : cls.depends) {

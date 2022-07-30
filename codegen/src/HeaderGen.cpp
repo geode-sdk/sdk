@@ -6,7 +6,7 @@ namespace { namespace format_strings {
 	char const* class_predeclare = "class {class_name};\n";
     // requires: base_classes, class_name
     char const* class_start = R"GEN(
-class GEODE_CODEGEN_DLL {class_name}{base_classes} {{
+class {class_name}{base_classes} {{
 public:
 )GEN";
 
@@ -80,8 +80,8 @@ std::string generateGDHeader(Root& root) {
         if (!cls.superclasses.empty()) {
             output += fmt::format(
                 can_find(cls.superclasses[0], "cocos2d") 
-                    ? format_strings::monostate_constructor
-                    : format_strings::monostate_constructor_cutoff,
+                    ? format_strings::monostate_constructor_cutoff
+                    : format_strings::monostate_constructor,
                 fmt::arg("class_name", cls.name),
                 fmt::arg("first_base", cls.superclasses[0])
             );

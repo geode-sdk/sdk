@@ -1,2 +1,0 @@
-include/fmod/** linguist-vendored
-*.bro linguist-language=C++

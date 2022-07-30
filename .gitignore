@@ -35,6 +35,11 @@
 # Workspace files are user-specific
 **/*.sublime-workspace
 **/*.sublime-project
+.vscode
 
 # Ignore build folders
 **/build
+build
+bin
+
+loader/src/internal/about.hpp

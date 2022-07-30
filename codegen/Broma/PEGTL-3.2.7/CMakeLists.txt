@@ -44,8 +44,9 @@ add_library(taocpp::pegtl ALIAS pegtl)
 target_include_directories(pegtl INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${PEGTL_INSTALL_INCLUDE_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../include/Geode/utils>
 )
+
+target_link_libraries(pegtl INTERFACE filesystem)
 
 # require C++17
 target_compile_features(pegtl INTERFACE cxx_std_17)
@@ -107,19 +108,3 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(pegtl-config-version.cmake COMPATIBILITY SameMajorVersion)
 
 # install and export target
-install(TARGETS pegtl EXPORT pegtl-targets)
-
-install(EXPORT pegtl-targets
-  FILE pegtl-config.cmake
-  NAMESPACE taocpp::
-  DESTINATION ${PEGTL_INSTALL_CMAKE_DIR}
-)
-
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pegtl-config-version.cmake DESTINATION ${PEGTL_INSTALL_CMAKE_DIR})
-install(DIRECTORY include/ DESTINATION ${PEGTL_INSTALL_INCLUDE_DIR})
-install(FILES LICENSE DESTINATION ${PEGTL_INSTALL_DOC_DIR})
-
-export(EXPORT pegtl-targets
-  FILE ${pegtl_BINARY_DIR}/pegtl-targets.cmake
-  NAMESPACE taocpp::
-)

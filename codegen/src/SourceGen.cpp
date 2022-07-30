@@ -91,7 +91,7 @@ std::string generateGDSource(Root& root) {
 				    fmt::arg("return", fn->beginning.ret.name)
 				);
 			} else if (auto fn = f.get_as<FunctionBindField>()) {
-				if (codegen::getStatus(f) == BindStatus::Unbindable)
+				if (codegen::getStatus(f) != BindStatus::NeedsBinding)
 					continue;
 
 				char const* used_declare_format;

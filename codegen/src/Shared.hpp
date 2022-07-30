@@ -65,6 +65,8 @@ namespace codegen {
                 return p.ios;
             case Platform::Android:
                 return p.android;
+            default: // unreachable
+                return p.win;
         }
     }
 
